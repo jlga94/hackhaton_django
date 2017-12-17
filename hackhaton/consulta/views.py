@@ -7,7 +7,7 @@ import csv,string, re
 from nltk.stem.snowball import SpanishStemmer
 from nltk.corpus import stopwords
 from collections import Counter
-import unicodedata
+import unicodedata, codecs
 
 spanishStemmer = SpanishStemmer()
 
@@ -36,6 +36,7 @@ spanishStemmer = SpanishStemmer()
 
 def readCSV():
     with open('static/Lista-de-palabras.csv') as csvfile:
+    #with open('static/Lista-de-palabras.csv', encoding="utf-8",errors='ignore') as csvfile:
         reader = csv.DictReader(csvfile,dialect='excel')
         legal = set()
         psicologica = set()
@@ -115,6 +116,8 @@ class ConsultaViewSet(viewsets.ModelViewSet):
 		lista = readCSV()
 		legal = lista['Legal']
 		psicologica = lista['Psicologica']
+		print(legal)
+		print(psicologica)
 
 		print("Total Legal: " + str(len(legal)))
 		print("Total Psicologica: " + str(len(psicologica)))
