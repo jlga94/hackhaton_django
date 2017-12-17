@@ -7,6 +7,7 @@ import csv,string, re
 from nltk.stem.snowball import SpanishStemmer
 from nltk.corpus import stopwords
 from collections import Counter
+import unicodedata
 
 spanishStemmer = SpanishStemmer()
 
@@ -43,13 +44,16 @@ def readCSV():
         	if textLegal != None:
         		listWordsLegal = textLegal.split()
         		for word in listWordsLegal:
-        			legal.add(word)
+        			#legal.add(word)
+        			legal.add(spanishStemmer.stem(word))
+
 
         	textPsicologica = row['Psicologica']
         	if textPsicologica != None:
         		listWordsPsicologica = textPsicologica.split()
         		for word in listWordsPsicologica:
-        			psicologica.add(word)
+        			#psicologica.add(word)
+        			psicologica.add(spanishStemmer.stem(word))
 
             #legal.add(row['Legal'])
             #psicologica.add(row['Psicologica'])
@@ -69,6 +73,9 @@ def remove_punctuation(text):
 	regex = re.compile('[%s]' % re.escape(string.punctuation))
 	return regex.sub(' ', text)
 
+def strip_accents(s):
+	return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+
 def removeStopwordsInList(text):
 	stopwords_sp_nltk = set(stopwords.words('spanish'))
 
@@ -78,12 +85,13 @@ def removeStopwordsInList(text):
         'grande','hacia','conforme','número','siguiente','link','cuatro','tres','cinco','sitio','lista','anual','mensual','trimestral','bimestral','semestral','semanal','diario','día'}
 	stopSpanish = stopwords_sp_nltk.union(additionalStopwordsSpanish)
 
-	#return [spanishStemmer.stem(word) for word in text.split() if word not in stopSpanish]
-	return [word for word in text.split() if word not in stopSpanish]
+	return [spanishStemmer.stem(word) for word in text.split() if word not in stopSpanish]
+	#return [word for word in text.split() if word not in stopSpanish]
 
 def preprocessText(text):
 
 	text=text.lower()
+	text = strip_accents(text)
 	text = remove_numbers(text)
 	text = remove_punctuation(text)
 	listWords = removeStopwordsInList(text)
