@@ -17,10 +17,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from insercion import views as viewsInsercion
+from consulta import views as viewsConsulta
+
+from rest_framework.urlpatterns import format_suffix_patterns
 
 router = routers.DefaultRouter()
-router.register(r'insertar', viewsInsercion.InsercionViewSet, base_name="Insertar")
+router.register(r'consulta', viewsConsulta.ConsultaViewSet, base_name="Consulta")
 
 
 urlpatterns = [
